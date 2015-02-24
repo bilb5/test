@@ -1,0 +1,30 @@
+#cloud-config
+
+hostname: grave1
+
+coreos:  
+  etcd:    
+    addr: $private_ipv4:4001
+    peer-addr: $private_ipv4:7001
+  units:
+    - name: etcd.service
+      command: start
+    - name: fleet.service
+      command: start
+    - name: static.network
+      content: |
+        [Match]
+        Name=ens3
+
+        [Network]
+        Address=192.168.2.20
+        Gateway=192.168.255
+        DNS=192.168.2.1
+users:  
+  - name: bilb5
+    ssh-authorized-keys: 
+      - ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAQEAvgySJz6r5oaj+FwY8m/tpDbOjnV/eOPIj0R3pl+6pfbCGgn1tpuFnZPT3Y/lKL5mPMDtxYMTd5MvjnCj5a/NakAgeRYxNAnuRMELBMxJoluT8me6bF1u32dTnVLaG/sg3e0fvIcEcccCD6S5AJiIKTw9khNFG8ay/qIiJDDYMXHi2xOJvOvQ+NQx7XSWre+FU1ci7qS8uZbhC2/xA4ukvgvZ5siNTJ9usx55ZXI3G26+Yr8LuI0eVJ4CMJ5DrS3gjxskYqC5s/LSHIen0Z9WZ+u4q4Spg8v8kR7fcrHyk+19n+nzYevLvIXysAuoE3jHMlGVuDatx4Vce36slVyvUw== rsa-keyCOREOS
+
+  - groups:
+      - sudo
+      - docker
